@@ -1,0 +1,32 @@
+# Secrets - NEVER commit these
+.env
+.env.*
+*.csv
+credentials
+.aws/
+*.pem
+*.key
+secrets/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Output
+reports/
+*.pdf
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
