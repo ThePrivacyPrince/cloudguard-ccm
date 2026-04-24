@@ -8,6 +8,7 @@ from rich.table import Table
 
 from src.checks.iam_mfa import check_root_mfa
 from src.checks.s3_public import check_s3_public_access_block
+from src.checks.cloudtrail import check_cloudtrail_enabled  # ← NEW LINE
 
 
 console = Console()
@@ -18,6 +19,7 @@ def run_checks() -> list[dict]:
     return [
         check_root_mfa(),
         check_s3_public_access_block(),
+        check_cloudtrail_enabled(),  # ← NEW LINE
     ]
 
 
