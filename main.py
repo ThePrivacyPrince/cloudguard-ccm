@@ -17,6 +17,7 @@ def run_checks() -> list[dict]:
     """Execute all control checks. Extend this list as checks are added."""
     return [
         check_root_mfa(),
+        check_s3_public_access_block(),
     ]
 
 
