@@ -30,3 +30,14 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Python runtime artifacts
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Python runtime artifacts
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
