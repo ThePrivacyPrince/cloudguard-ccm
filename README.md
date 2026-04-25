@@ -33,6 +33,7 @@ Every control check in CloudGuard cites its requirement across:
 | CC6.1-root-mfa | Root account has MFA enabled | SOC 2 CC6.1, PCI 8.4.2/8.4.3, HIPAA 164.312(d), NIST IA-2(1), ISO A.5.17, CIS 1.5 | Critical |
 | CC6.6-s3-public-access | No S3 buckets allow public access | SOC 2 CC6.6, PCI 1.3.1/1.4.1, HIPAA 164.312(e), NIST AC-3, ISO A.8.20, CIS 2.1.5 | Critical |
 | CC7.2-cloudtrail-enabled | CloudTrail multi-region logging with file validation | SOC 2 CC7.2, PCI 10.2/10.3, HIPAA 164.312(b), NIST AU-2/AU-3, ISO A.8.15, CIS 3.1-3.4 | Critical |
+| CC6.1-iam-password-policy | IAM password policy enforces strong authentication | SOC 2 CC6.1, PCI 8.3.6/8.3.7/8.3.9, HIPAA 164.308(a)(5)(ii)(D), NIST IA-5(1), ISO A.5.17, CIS 1.8/1.9 | High |
 
 ## 🏗 Architecture
 cloudguard-ccm/
