@@ -26,6 +26,13 @@ Every control check in CloudGuard cites its requirement across:
 | ISO 27001:2022 | Annex A controls |
 | CIS AWS Foundations Benchmark | Technical guidance |
 
+## 📄 Outputs & Reporting
+
+CloudGuard produces audit-ready output in two formats:
+
+- **Terminal (default):** Rich-formatted PASS/FAIL table for live operator use. Run `python main.py`.
+- **PDF report:** Styled audit deliverable with executive summary, severity breakdown, multi-framework citation table, and remediation guidance. Run `python main.py --pdf` — output written to `reports/cloudguard_report_<timestamp>.pdf`. Designed for cover-letter attachment, internal audit prep, and external auditor review.
+
 ## ✅ Controls Implemented
 
 | Control ID | Description | Frameworks | Severity |
@@ -75,7 +82,7 @@ CloudGuard **practices what it preaches**:
 
 ## 🗺 Roadmap
 
-**Week 2:** CloudTrail enabled, IAM password policy, root access key checks, PDF report generator
+**Week 2:** CloudTrail enabled, IAM password policy, root access key checks
 **Week 3:** GitHub Actions scheduled nightly runs, JSON output for downstream tooling
 **Week 4+:** Additional check families (VPC, RDS, KMS), HTML dashboard, framework-specific filtering (`--framework hipaa`)
 
