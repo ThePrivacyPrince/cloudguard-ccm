@@ -28,10 +28,22 @@ Every control check in CloudGuard cites its requirement across:
 
 ## 📄 Outputs & Reporting
 
-CloudGuard produces audit-ready output in two formats:
+CloudGuard produces audit-ready output in three progressively-stronger forms:
 
 - **Terminal (default):** Rich-formatted PASS/FAIL table for live operator use. Run `python main.py`.
-- **PDF report:** Styled audit deliverable with executive summary, severity breakdown, multi-framework citation table, and remediation guidance. Run `python main.py --pdf` — output written to `reports/cloudguard_report_<timestamp>.pdf`. Designed for cover-letter attachment, internal audit prep, and external auditor review.
+- **PDF report:** Styled audit deliverable with executive summary, severity breakdown, multi-framework citation table, and remediation guidance. Run `python main.py --pdf` — output written to `reports/cloudguard_report_<timestamp>.pdf`.
+- **Tamper-evident evidence pack:** Run `python main.py --pack` to produce a full chain-of-custody bundle:
+  - `cloudguard_report_<timestamp>.pdf` — the audit report
+  - `cloudguard_report_<timestamp>.manifest.json` — provenance metadata, framework coverage, and SHA-256 hash of every artifact
+  - `cloudguard_report_<timestamp>.evidence-pack.zip` — bundled archive
+  - `cloudguard_report_<timestamp>.evidence-pack.zip.sha256` — sidecar hash in canonical `sha256sum` format
+
+  Auditors can verify integrity on any platform with the standard utility:
+```bash
+  cd reports && shasum -a 256 -c *.evidence-pack.zip.sha256
+```
+
+  Any evidence where  integrity cannot be verified is not evidence, it is an unsigned claim. CloudGuard rejects the unsigned claim and produces hash verified output by default.
 
 ## ✅ Controls Implemented
 
