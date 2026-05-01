@@ -16,6 +16,8 @@ from src.checks.s3_public import check_s3_public_access_block
 from src.checks.cloudtrail import check_cloudtrail_enabled
 from src.checks.iam_password_policy import check_iam_password_policy
 from src.reporters.pdf_reporter import generate_pdf_report
+from src.checks.iam_root_access_keys import check_root_access_keys
+from src.checks.iam_unused_users import check_iam_unused_users
 
 
 console = Console()
@@ -27,7 +29,9 @@ def run_checks() -> list[dict]:
         check_root_mfa(),
         check_s3_public_access_block(),
         check_cloudtrail_enabled(),
-        check_iam_password_policy(),   # ← NEW
+        check_iam_password_policy(),
+        check_root_access_keys(),
+        check_iam_unused_users(),  # ← NEW
     ]
 
 
