@@ -16,6 +16,7 @@ from src.checks.s3_public import check_s3_public_access_block
 from src.checks.cloudtrail import check_cloudtrail_enabled
 from src.checks.iam_password_policy import check_iam_password_policy
 from src.reporters.pdf_reporter import generate_pdf_report
+from src.reporters.manifest import build_evidence_pack
 from src.checks.iam_root_access_keys import check_root_access_keys
 from src.checks.iam_unused_users import check_iam_unused_users
 
@@ -82,6 +83,11 @@ def main() -> None:
         action="store_true",
         help="Generate a PDF report in ./reports/ in addition to terminal output.",
     )
+    parser.add_argument(
+    "--pack",
+    action="store_true",
+    help="Generate a tamper-evident evidence pack (PDF + manifest + zip + SHA-256 sidecar).",
+)
     args = parser.parse_args()
 
     console.print("[bold cyan]CloudGuard — AWS Continuous Control Monitoring[/]")
@@ -94,12 +100,25 @@ def main() -> None:
     total = len(findings)
     console.print(f"[bold]Summary:[/] {passed}/{total} checks passed")
 
-    if args.pdf:
+    if args.pdf or args.pack:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = Path("reports") / f"cloudguard_report_{timestamp}.pdf"
         account_id = _get_account_id()
         generate_pdf_report(findings, output_path, account_id=account_id)
         console.print(f"\n[bold green]PDF report written to:[/] {output_path}")
+
+        if args.pack:
+            pack_artifacts = build_evidence_pack(
+                pdf_path=output_path,
+                findings=findings,
+                output_dir=Path("reports"),
+                account_id=account_id,
+            )
+            console.print(
+                f"[bold green]Evidence pack:[/] {pack_artifacts['zip']}\n"
+                f"[dim]  · Manifest:[/] {pack_artifacts['manifest']}\n"
+                f"[dim]  · Sidecar hash:[/] {pack_artifacts['sidecar']}"
+            )
 
 
 if __name__ == "__main__":
