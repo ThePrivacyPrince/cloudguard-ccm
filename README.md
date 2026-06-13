@@ -12,11 +12,12 @@ Traditional GRC programs capture screenshots during audit windows. By the time a
 
 ## Controls Implemented
 
-Five checks are currently working. A sixth (`check_root_access_keys`) is imported in `main.py` but the implementation file does not yet exist — the tool will not start until that file is created or the import is removed.
+Six checks are implemented and the tool starts cleanly.
 
 | Control ID | What it checks | Frameworks | Severity |
 |---|---|---|---|
 | CC6.1-root-mfa | Root account has MFA enabled | SOC 2 CC6.1, PCI 8.4.2/8.4.3, HIPAA 164.312(d), NIST IA-2(1), ISO A.5.17, CIS 1.5 | Critical |
+| CC6.1-root-access-keys | Root user has no active access keys | SOC 2 CC6.1/CC6.2, PCI 8.2.2/8.6.1, HIPAA 164.312(a)(1), NIST AC-2(9)/IA-2, ISO A.5.17, CIS 1.4 | Critical |
 | CC6.6-s3-public-access | All S3 buckets have Public Access Block fully configured | SOC 2 CC6.6, PCI 1.3.1/1.4.1, HIPAA 164.312(e), NIST AC-3, ISO A.8.20, CIS 2.1.5 | Critical |
 | CC7.2-cloudtrail-enabled | CloudTrail multi-region logging active with log file validation | SOC 2 CC7.2, PCI 10.2/10.3, HIPAA 164.312(b), NIST AU-2/AU-3, ISO A.8.15, CIS 3.1–3.4 | Critical |
 | CC6.1-iam-password-policy | IAM password policy meets 8 conditions (length, complexity, reuse, max age) | SOC 2 CC6.1, PCI 8.3.6/8.3.7/8.3.9, HIPAA 164.308(a)(5)(ii)(D), NIST IA-5(1), ISO A.5.17, CIS 1.8/1.9 | High |
@@ -61,26 +62,25 @@ python main.py --pack
 python -m pytest tests/ -v
 ```
 
-> **Note:** `main.py` currently imports `check_root_access_keys` from a file that does not exist. The tool will crash at startup with `ModuleNotFoundError` until `src/checks/iam_root_access_keys.py` is created or the import is removed.
-
 ## Sample Terminal Output
 
 ```
 CloudGuard — AWS Continuous Control Monitoring
 Querying AWS for live control posture...
 
-┌─────────────────────────────┬──────────┬────────┬─────────────────────────────────────────────────────────────┐
-│ Control ID                  │ Severity │ Status │ Remediation                                                 │
-├─────────────────────────────┼──────────┼────────┼─────────────────────────────────────────────────────────────┤
-│ CC6.1-root-mfa              │ CRITICAL │  PASS  │ —                                                           │
-│ CC6.6-s3-public-access      │ CRITICAL │  FAIL  │ Enable S3 Block Public Access on buckets: my-legacy-bucket  │
-│ CC7.2-cloudtrail-enabled    │ CRITICAL │  PASS  │ —                                                           │
-│ CC6.1-iam-password-policy   │ HIGH     │  FAIL  │ IAM → Account Settings → Edit password policy: min 14 chars │
-│ CC6.1-iam-unused-users      │ HIGH     │  FAIL  │ Disable/delete stale credentials: user dev-svc (key unused  │
-│                             │          │        │ 127 days)                                                   │
-└─────────────────────────────┴──────────┴────────┴─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────┬──────────┬────────┬─────────────────────────────────────────────────────────────┐
+│ Control ID                   │ Severity │ Status │ Remediation                                                 │
+├──────────────────────────────┼──────────┼────────┼─────────────────────────────────────────────────────────────┤
+│ CC6.1-root-mfa               │ CRITICAL │  PASS  │ —                                                           │
+│ CC6.1-root-access-keys       │ CRITICAL │  PASS  │ —                                                           │
+│ CC6.6-s3-public-access       │ CRITICAL │  FAIL  │ Enable S3 Block Public Access on buckets: my-legacy-bucket  │
+│ CC7.2-cloudtrail-enabled     │ CRITICAL │  PASS  │ —                                                           │
+│ CC6.1-iam-password-policy    │ HIGH     │  FAIL  │ IAM → Account Settings → Edit password policy: min 14 chars │
+│ CC6.1-iam-unused-users       │ HIGH     │  FAIL  │ Disable/delete stale credentials: user dev-svc (key unused  │
+│                              │          │        │ 127 days)                                                   │
+└──────────────────────────────┴──────────┴────────┴─────────────────────────────────────────────────────────────┘
 
-Summary: 2/5 checks passed
+Summary: 3/6 checks passed
 ```
 
 ## Evidence Pack Output
@@ -144,7 +144,6 @@ CloudGuard practices what it checks:
 
 | Item | Status |
 |---|---|
-| `src/checks/iam_root_access_keys.py` missing | Breaks startup — needs implementation or import removal |
 | `src/reporter.py`, `src/scorer.py` | Empty stubs — not wired into anything |
 | `config/controls.yaml` | Empty placeholder |
 | GitHub Actions scheduled nightly run | Not yet implemented |
